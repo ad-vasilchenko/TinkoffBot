@@ -26,10 +26,12 @@ class BotHandler:
 
         if len(get_result) > 0:
             last_update = get_result[-1]
+            flag = True
         else:
             last_update = get_result[len(get_result)]
+            flag = False
 
-        return last_update
+        return last_update, flag
 
 token = '867587456:AAHLtFqnmhSyhhaWerqE2D-sZ0_PQetrOSA'
 yt_token = 'trnsl.1.1.20190327T140319Z.26c39ab07e9607fe.cab07c62a79e982113bffce226374ad14ef30089'
@@ -40,11 +42,13 @@ def main():
     while True:
         greet_bot.get_updates(new_offset)
 
-        data = greet_bot.get_last_update()
-        update_id = data['update_id']
-        chat_id  = data['message']['chat']['id']
+        data, flag = greet_bot.get_last_update()
+        print(flag)
         
-        if update_id == data['update_id']:
+        if flag:
+            update_id = data['update_id']
+            chat_id  = data['message']['chat']['id']
+        
             try:
                 payload = {'key':yt_token,'text': data['message']['text'],'lang':'ru-en'}
                 translate = requests.post("https://translate.yandex.net/api/v1.5/tr.json/translate",data=payload).json()['text']
@@ -52,9 +56,8 @@ def main():
             except:
                 greet_bot.send_message(chat_id, "Ошибка")
                 
-        #sleep(1)   
-
-        new_offset = update_id + 1
+            sleep(1)   
+            new_offset = update_id + 1
 
 if __name__ == '__main__':  
     try:
