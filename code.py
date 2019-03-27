@@ -1,6 +1,6 @@
 import requests  
-import datetime
-from time import sleep
+#import datetime
+#from time import sleep
 
 class BotHandler:
 
@@ -52,7 +52,7 @@ def main():
             except:
                 greet_bot.send_message(chat_id, "Ошибка")
                 
-        sleep(1)   
+        #sleep(1)   
 
         new_offset = update_id + 1
 
